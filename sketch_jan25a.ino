@@ -16,36 +16,56 @@ int m1Speed;
 int m2Speed;
 int m3Speed;
 int m4Speed;
-const size_t dataLength = 4;
-byte data[dataLength];
+uint8_t data[4] = {0,0,0,0};
 
 
 void setup() {
   
   roboclaw.begin(38400);
   roboclaw2.begin(38400);
-  serial.begin(9600);
+  Serial.begin(9600);
 
 }
 
 void loop() {
 if (Serial.available()) {
-  Serial.readBytes(data, 4);
+   Serial.readBytes(data, 4);
 }
 
- roboclaw.ForwardBackwardM1(address, data[0]);
- roboclaw.ForwardBackwardM2(address, data[1]);
- roboclaw2.ForwardBackwardM1(address2, data[2]);
- roboclaw2.ForwardBackwardM2(address2, data[3]);
-
+if ( data[0] >= 0) {
+  m1Speed = data[0];
+ roboclaw.ForwardM1(address, data[0]);
+ Serial.write(data[0]);
+} else {
+  data[0] = -data[0];
+  roboclaw.BackwardM1(address, data[0]);
 }
 
-/*void setSpeed(int m1Speed, int m2Speed, int m3Speed, int m4Speed) {
-  for(int i = 0; i < sizeof(data); i++) {
-  data[0] = m1Speed;
-  data[1] = m2Speed;
-  data[2] = m3Speed;
-  data[3] = m4Speed;
-  }
-} */
+if ( data[1] >= 0) {
+ roboclaw.ForwardM2(address, data[1]);
+ Serial.write(data[1]);
+} else {
+  data[1] = -data[1];
+  roboclaw.BackwardM2(address, data[1]);
+}
 
+if ( data[2] >= 0) {
+ roboclaw2.ForwardM1(address2, data[2]);
+ Serial.write(data[2]);
+} else {
+  data[2] = -data[2];
+  roboclaw2.BackwardM1(address2, data[2]);
+}
+
+if ( data[3] >= 0) {
+ roboclaw2.ForwardM2(address2, data[3]);
+  Serial.write(data[3]);
+} else {
+  data[3] = -data[3];
+  roboclaw2.BackwardM2(address2, data[3]);
+  
+}
+
+Serial.println();
+
+}
