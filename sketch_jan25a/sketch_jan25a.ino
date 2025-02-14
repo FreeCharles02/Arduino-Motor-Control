@@ -26,7 +26,7 @@ void setup() {
 }
 
 void loop() {
-if (Serial.available()) {
+while (Serial.available()) {
    Serial.readBytes(data, 4);
 }
 
