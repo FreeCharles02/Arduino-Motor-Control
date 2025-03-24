@@ -6,7 +6,7 @@
 SoftwareSerial serial1(10, 11);
 SoftwareSerial serial2(9, 8);
 
-uint8_t data[4] = {0,0,0,0}  
+ int32_t data[4] = {0,0,0,0}; 
 
 void setup() {
   serial1.begin(38400);
@@ -15,12 +15,12 @@ void setup() {
 }
 
 void loop() {
-  while(Serial.available()) {
-    Serial.readBytes(data, 4);
+  while(Serial.available() >= 16) {
+    Serial.readBytes((uint8_t*)data, 16);
     }
     
-   serial1.write(data[0]);
-   serial1.write(data[1]);
-   serial2.write(data[2]);
-   serial2.write(data[3]);
+      serial1.write((uint8_t*)&data[0], 4);
+      serial1.write((uint8_t*)&data[1], 4);
+      serial2.write((uint8_t*)&data[2], 4);
+      serial2.write((uint8_t*)&data[3], 4);
 }
